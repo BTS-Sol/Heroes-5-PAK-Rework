@@ -26,8 +26,9 @@ Bekommt: Magie Dämpfen, Andere Abschirmen
 ________________________________________________
 |NAME            |      Obsidiangargoyle                   
 |                |     
-|Stat-Cha1       |      SCH/MA  0/0 -> 0/5
-|Stat-Cha2       |      SPEED  7 -> 9
+|Stat-Cha1       |      SCH/MA  0/0 -> 0/5    
+|Stat-Cha2       |      SPEED  7 -> 9 
+
 |________________|______________________________
 
 SKILLS: 
@@ -40,6 +41,7 @@ ________________________________________________
 |NAME            |      Titan      
 |                |     
 |Stat-Cha1       |      keine?
+
 |________________|______________________________
 
 SKILLS: 
@@ -53,12 +55,12 @@ Ruft Blitz herbei (30× Trupp Luft dmg und ignoriert Magie Resistenz aber keine 
 ________________________________________________
 |NAME            |      Gewittertitan -> Gigant
 |                |                              
-|Stat-Cha1       |      HP 190 -> 235                  
-|Stat-Cha2       |      ANG 30 -> 25                    
-|Stat-Cha3       |      DEF  30 -> 35                     
-|Stat-Cha4       |      INIT  10 -> 11
-|Stat-Cha5       |      SPEED 6 -> 5
-|Stat-Cha6       |      SCH/MA 5/0 -> 0/38
+|Stat-Cha1       |      HP 190 -> 235                
+|Stat-Cha2       |      ANG 30 -> 25                  
+|Stat-Cha3       |      DEF  30 -> 35               
+|Stat-Cha4       |      INIT  10 -> 11       
+|Stat-Cha5       |      SPEED 6 -> 5       
+|Stat-Cha6       |      SCH/MA 5/0 -> 0/38        
 ______________________________
 Schießt nicht
 Wirkt Zauber
