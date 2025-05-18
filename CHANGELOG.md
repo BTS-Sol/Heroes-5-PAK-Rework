@@ -62,9 +62,11 @@ ________________________________________________
 |Stat-Cha5       |      SPEED 6 -> 5       
 |Stat-Cha6       |      SCH/MA 5/0 -> 0/38        
 |________________|______________________________
+
 Schießt nicht
 Wirkt Zauber
 Gewitterwolke weg
+
 SPELLS: (haben bei 5, 15 AP)
 16 Mana
 Kettenblitz (Geübt) 20 + 20×
