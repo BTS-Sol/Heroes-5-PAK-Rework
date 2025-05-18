@@ -50,7 +50,9 @@ Kraftübertragung: Gibt Held Zauberkraft der Einheit (addiert maximal so viel wi
 
 Gewitterrufer (dmg 10×Trupp range Abzug 1% pro Titan) (Buffen vllt?)
 
-Ruft Blitz herbei (30× Trupp Luft dmg und ignoriert Magie Resistenz aber keine immunität) (Buffen wenn möglich)
+//vllt kann man nur eine Aktivierte adden (maximal 2 scheinbar, aber noch nix getestet)
+
+Ruft Blitz herbei (30× Trupp Luft dmg und ignoriert Magie Resistenz aber keine immunität) (Buffen auf 70, dmg dann wie Volle gegen Seraphim)
 
 ________________________________________________
 |NAME            |      Gewittertitan -> Gigant
@@ -63,11 +65,12 @@ ________________________________________________
 |Stat-Cha6       |      SCH/MA 5/0 -> 0/38        
 |________________|______________________________
 
-Schießt nicht
-Wirkt Zauber
+Schießt nicht,
+Wirkt Zauber,
 Gewitterwolke weg
 
 SPELLS: (haben bei 5, 15 AP)
+
 16 Mana
 Kettenblitz (Geübt) 20 + 20×
 
@@ -80,4 +83,4 @@ Phantomarmee (Meist.) Bis Stufe 7
 35 Mana
 Phönix Herbeirufen (Meist.) 100% eff AP
 
-// Phönix und Phantomarmee gehen worst case nicht.. dann Arkaner Kristall auf Meisterlich, Kettenblitz weg und INIT auf 14 bzw. 15
+// Phönix und Phantomarmee gehen worst case nicht.. dann Arkaner Kristall auf Meisterlich, Kettenblitz weg und 
