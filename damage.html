@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Heroes Damage-Berechnung</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f0f2f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .box {
+      flex: 1 1 45%;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin-top: 5px;
+    }
+    #result {
+      margin-top: 30px;
+      font-weight: bold;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Damage-Berechnung für Heroes</h1>
+
+<div class="container">
+  <div class="box">
+    <h2>Angreifer</h2>
+    <label>Anzahl</label>
+    <input type="number" id="attackerCount">
+
+    <label>Angriff</label>
+    <input type="number" id="attackValue">
+
+    <label>Min-Schaden</label>
+    <input type="number" id="minDamage">
+
+    <label>Max-Schaden</label>
+    <input type="number" id="maxDamage">
+
+    <label>Additional % Increase 1</label>
+    <input type="number" id="damageIncrease1" placeholder="z.B. 20 für 20%">
+
+    <label>Additional % Increase 2</label>
+    <input type="number" id="damageIncrease2" placeholder="z.B. 10 für 10%">
+  </div>
+
+  <div class="box">
+    <h2>Verteidiger</h2>
+    <label>Anzahl</label>
+    <input type="number" id="defenderCount">
+
+    <label>Verteidigung</label>
+    <input type="number" id="defenseValue">
+
+    <label>Einheitenleben</label>
+    <input type="number" id="unitHealth">
+
+    <label>Additional % Decrease</label>
+    <input type="number" id="damageDecrease" placeholder="z.B. 15 für 15%">
+  </div>
+</div>
+
+<button onclick="calculateDamage()">Berechnen</button>
+
+<div id="result"></div>
+
+<script>
+function calculateDamage() {
+  const aCount = parseFloat(document.getElementById('attackerCount').value);
+  const aAtk = parseFloat(document.getElementById('attackValue').value);
+  const minDmg = parseFloat(document.getElementById('minDamage').value);
+  const maxDmg = parseFloat(document.getElementById('maxDamage').value);
+  const aInc1 = parseFloat(document.getElementById('damageIncrease1').value) || 0;
+  const aInc2 = parseFloat(document.getElementById('damageIncrease2').value) || 0;
+
+  const dCount = parseFloat(document.getElementById('defenderCount').value);
+  const dDef = parseFloat(document.getElementById('defenseValue').value);
+  const dHP  = parseFloat(document.getElementById('unitHealth').value);
+  const dDec = parseFloat(document.getElementById('damageDecrease').value) || 0;
+
+  if (isNaN(aCount) || isNaN(aAtk) || isNaN(minDmg) || isNaN(maxDmg) ||
+      isNaN(dCount) || isNaN(dDef) || isNaN(dHP)) {
+    document.getElementById('result').innerText = "Bitte alle Felder korrekt ausfüllen.";
+    return;
+  }
+
+  // Multiplier basierend auf Angriff und Verteidigung
+  let multiplier = 1;
+  if (aAtk >= dDef) {
+    multiplier = 1 + (aAtk - dDef) * 0.05;
+  } else {
+    const diff = dDef - aAtk;
+    multiplier = 1 - (diff / (20 + diff));
+  }
+
+  // Basis-Schaden ohne Boni
+  const baseMin = aCount * minDmg * multiplier;
+  const baseMax = aCount * maxDmg * multiplier;
+
+  const totalIncrease1 = 1 + aInc1 / 100;
+  const totalIncreaseBoth = 1 + (aInc1 + aInc2) / 100;
+  const totalDecrease = 1 - dDec / 100;
+
+  // Schaden mit nur Bonus 1
+  const dmgMin1 = baseMin * totalIncrease1 * totalDecrease;
+  const dmgMax1 = baseMax * totalIncrease1 * totalDecrease;
+
+  // Schaden mit beiden Boni
+  const finalMin = baseMin * totalIncreaseBoth * totalDecrease;
+  const finalMax = baseMax * totalIncreaseBoth * totalDecrease;
+
+  // Pech / Glück
+  const luckyMin = finalMin * 2;
+  const luckyMax = finalMax * 2;
+  const unluckyMin = finalMin * 0.5;
+  const unluckyMax = finalMax * 0.5;
+
+  // Tote
+  const killsMin = Math.floor(finalMin / dHP);
+  const killsMax = Math.floor(finalMax / dHP);
+  const killsUnluckyMin = Math.floor(unluckyMin / dHP);
+  const killsUnluckyMax = Math.floor(unluckyMax / dHP);
+  const killsLuckyMin = Math.floor(luckyMin / dHP);
+  const killsLuckyMax = Math.floor(luckyMax / dHP);
+
+  // Extra-Damage durch Bonus 2 berechnen
+  const extraDmgMin = finalMin - finalMin/(1+(aInc2/100));
+  const extraDmgMax = finalMax - finalMax/(1+(aInc2/100));
+
+  document.getElementById('result').innerText =
+    `📊 Schaden pro Runde:\n` +
+    `• Normal: ${finalMin.toFixed(2)} – ${finalMax.toFixed(2)} Schaden\n` +
+    `• Mit Pech: ${unluckyMin.toFixed(2)} – ${unluckyMax.toFixed(2)}\n` +
+    `• Mit Glück: ${luckyMin.toFixed(2)} – ${luckyMax.toFixed(2)}\n\n` +
+    `💀 Tote Einheiten:\n` +
+    `• Normal: ${killsMin} – ${killsMax} Einheiten\n` +
+    `• Mit Pech: ${killsUnluckyMin} - ${killsUnluckyMax} Einheiten\n` +
+    `• Mit Glück: ${killsLuckyMin} - ${killsLuckyMax} Einheiten\n\n` +
+    `➕ Zusätzlicher Schaden (normal) durch Bonus 2 (${aInc2}%):\n` +
+    `• ${extraDmgMin.toFixed(2)} – ${extraDmgMax.toFixed(2)} Schaden`;
+}
+</script>
+
+
+</body>
+</html>
