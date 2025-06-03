@@ -1,2 +1,2 @@
-Peasent, 1, 0, zuflucht, 1, 1, 4, 7, 5
+Peasant, 1, 0, zuflucht, 1, 1, 4, 7, 5
 Highelf, 3, 2, sylvaner, 11, 6, 6, 4, 2
