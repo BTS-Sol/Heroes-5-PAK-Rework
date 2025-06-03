@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Heldenfilter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      width: 200px;
+      height: 400px;
+      background-color: white;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f99;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="box" id="imageBox"></div>
+
+    <div class="form">
+      <div><label>Name:</label><input id="name" type="text"></div>
+
+      <div><label>Level:</label>
+        <select id="level">
+          <option value="">--</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+      </div>
+
+      <div><label>Aufrüstung:</label>
+        <select id="auf">
+          <option value="">--</option>
+          <option>0</option><option>1</option><option>2</option>
+        </select>
+      </div>
+
+      <div><label>Fraktion:</label>
+        <select id="fraktion">
+          <option value="">--</option>
+          <option>sylvaner</option><option>akademie</option><option>nekropolis</option>
+          <option>dungeon</option><option>zuflucht</option><option>festung</option>
+          <option>bastion</option><option>inferno</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Angriff:</label>
+        <input id="attack" type="number" min="0">
+        <select id="attack_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Verteidigung:</label>
+        <input id="defense" type="number" min="0">
+        <select id="defense_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Leben:</label>
+        <input id="life" type="number" min="0">
+        <select id="life_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Init:</label>
+        <input id="init" type="number" min="0">
+        <select id="init_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Schnelligkeit:</label>
+        <input id="speed" type="number" min="0">
+        <select id="speed_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
+
+      <button onclick="suchen()">Suchen</button>
+    </div>
+  </div>
+
+  <div id="resultsTable" style="padding: 20px 40px;"></div>
+
+  <script>
+    function compareNumber(actual, filter, comp) {
+      if (filter === "") return true;
+      actual = parseFloat(actual);
+      filter = parseFloat(filter);
+      switch (comp) {
+        case "=": return actual === filter;
+        case ">=": return actual >= filter;
+        case "<=": return actual <= filter;
+        default: return true;
+      }
+    }
+
+    async function suchen() {
+      const response = await fetch("chars.txt");
+      const text = await response.text();
+      const lines = text.split("\n");
+
+      const nameFilter = document.getElementById("name").value.toLowerCase();
+      const levelFilter = document.getElementById("level").value;
+      const aufFilter = document.getElementById("auf").value;
+      const fraktionFilter = document.getElementById("fraktion").value;
+
+      const attackFilter = document.getElementById("attack").value;
+      const attackComp = document.getElementById("attack_comp").value;
+
+      const defenseFilter = document.getElementById("defense").value;
+      const defenseComp = document.getElementById("defense_comp").value;
+
+      const lifeFilter = document.getElementById("life").value;
+      const lifeComp = document.getElementById("life_comp").value;
+
+      const initFilter = document.getElementById("init").value;
+      const initComp = document.getElementById("init_comp").value;
+
+      const speedFilter = document.getElementById("speed").value;
+      const speedComp = document.getElementById("speed_comp").value;
+
+      const matchingRecords = [];
+
+      for (let line of lines) {
+        if (!line.trim()) continue;
+        const parts = line.split(",");
+        if (parts.length < 9) continue;
+
+        const [
+          recName, recLevel, recAuf, recFraktion,
+          recAttack, recDefense, recLife, recInit, recSpeed
+        ] = parts.map(p => p.trim());
+
+        if (
+          (nameFilter && !recName.toLowerCase().includes(nameFilter)) ||
+          (levelFilter && recLevel !== levelFilter) ||
+          (aufFilter && recAuf !== aufFilter) ||
+          (fraktionFilter && recFraktion !== fraktionFilter) ||
+          !compareNumber(recAttack, attackFilter, attackComp) ||
+          !compareNumber(recDefense, defenseFilter, defenseComp) ||
+          !compareNumber(recLife, lifeFilter, lifeComp) ||
+          !compareNumber(recInit, initFilter, initComp) ||
+          !compareNumber(recSpeed, speedFilter, speedComp)
+        ) continue;
+
+        matchingRecords.push({
+          name: recName,
+          level: recLevel,
+          auf: recAuf,
+          fraktion: recFraktion,
+          attack: recAttack,
+          defense: recDefense,
+          life: recLife,
+          init: recInit,
+          speed: recSpeed
+        });
+      }
+
+      const imageBox = document.getElementById("imageBox");
+      const tableContainer = document.getElementById("resultsTable");
+      tableContainer.innerHTML = "";
+      imageBox.innerHTML = "";
+
+      if (matchingRecords.length > 0) {
+        const found = matchingRecords[0];
+        const img = document.createElement("img");
+        img.src = `heroes-img/${found.name}.png`;
+        img.alt = found.name;
+        imageBox.appendChild(img);
+
+        document.getElementById("name").value = found.name;
+        document.getElementById("level").value = found.level;
+        document.getElementById("auf").value = found.auf;
+        document.getElementById("fraktion").value = found.fraktion;
+        document.getElementById("attack").value = found.attack;
+        document.getElementById("defense").value = found.defense;
+        document.getElementById("life").value = found.life;
+        document.getElementById("init").value = found.init;
+        document.getElementById("speed").value = found.speed;
+
+        if (matchingRecords.length > 1) {
+          const table = document.createElement("table");
+
+          const headers = ["Name", "Level", "Aufrüstung", "Fraktion", "Angriff", "Verteidigung", "Leben", "Initiative", "Schnelligkeit"];
+          const thead = document.createElement("thead");
+          const tr = document.createElement("tr");
+          headers.forEach(h => {
+            const th = document.createElement("th");
+            th.textContent = h;
+            tr.appendChild(th);
+          });
+          thead.appendChild(tr);
+          table.appendChild(thead);
+
+          const tbody = document.createElement("tbody");
+          matchingRecords.slice(1).forEach(rec => {
+            const row = document.createElement("tr");
+            Object.values(rec).forEach(val => {
+              const td = document.createElement("td");
+              td.textContent = val;
+              row.appendChild(td);
+            });
+            tbody.appendChild(row);
+          });
+          table.appendChild(tbody);
+
+          tableContainer.appendChild(table);
+        }
+      } else {
+        alert("Kein Charakter gefunden, der den Kriterien entspricht.");
+      }
+    }
+  </script>
+
+</body>
+</html>
