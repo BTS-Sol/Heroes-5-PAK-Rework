@@ -111,9 +111,9 @@
       <div><label>Fraktion:</label>
         <select id="fraktion">
           <option value="">--</option>
-          <option>sylvaner</option><option>akademie</option><option>nekropolis</option>
-          <option>dungeon</option><option>zuflucht</option><option>festung</option>
-          <option>bastion</option><option>inferno</option>
+          <option>PRESERVE</option><option>ACADEMY</option><option>NECROMANCY</option>
+          <option>DUNGEON</option><option>HEAVEN</option><option>FORTRESS</option>
+          <option>STRONGHOLD</option><option>INFERNO</option>
         </select>
       </div>
 
@@ -206,10 +206,13 @@
   </select>
 </div>
 
-      <button onclick="suchen()">Suchen</button>
-    </div>
+     <div style="display: flex; gap: 10px;">
+  <button onclick="suchen()">Suchen</button>
+  <button onclick="resetFields()">Felder leeren</button>
   </div>
 
+    </div>
+  </div>
   <div id="resultsTable" style="padding: 20px 40px;"></div>
 
   <script>
@@ -223,6 +226,18 @@
         case "<=": return actual <= filter;
         default: return true;
       }
+    }
+    function resetFields() {
+      document.querySelectorAll("input, select").forEach(field => {
+        if (field.tagName === "SELECT") {
+          field.value = "";
+        } else {
+          field.value = "";
+        }
+      });
+    
+      document.getElementById("imageBox").innerHTML = "";
+      document.getElementById("resultsTable").innerHTML = "";
     }
 
     async function suchen() {
