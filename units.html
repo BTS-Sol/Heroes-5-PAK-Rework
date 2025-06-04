@@ -300,7 +300,11 @@
           defense: recDefense,
           life: recLife,
           init: recInit,
-          speed: recSpeed
+          speed: recSpeed,
+          shots: recShots,
+          minDamage: recMinDamage,
+          maxDamage: recMaxDamage,
+          weeklyGrowth: recWeeklyGrowth
         });
       }
 
@@ -325,6 +329,11 @@
         document.getElementById("life").value = found.life;
         document.getElementById("init").value = found.init;
         document.getElementById("speed").value = found.speed;
+        document.getElementById("shots").value = found.shots;
+        document.getElementById("minDamage").value = found.minDamage;
+        document.getElementById("maxDamage").value = found.maxDamage;
+        document.getElementById("weeklyGrowth").value = found.weeklyGrowth;
+
 
         if (matchingRecords.length > 1) {
           const table = document.createElement("table");
