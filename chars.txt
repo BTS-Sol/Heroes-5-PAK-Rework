@@ -17,7 +17,7 @@ DjinnVizier, 5, false, ACADEMY, 13, 13, 50, 12, 8, 0, 14, 19, 3
 GremlinSaboteur, 1, false, ACADEMY, 5, 3, 6, 12, 5, 7, 1, 2, 20
 MarbleGargoyle, 2, false, ACADEMY, 2, 6, 20, 11, 7, 0, 1, 2, 14
 ObsidianGolem, 3, false, ACADEMY, 6, 4, 20, 9, 4, 0, 5, 7, 9
-RakshasaKshatri, 6, false, ACADEMY, 27, 20, 135, 8, 7, 0, 25, 35, 2
+Rakshasa_Kshatri, 6, false, ACADEMY, 27, 20, 135, 8, 7, 0, 25, 35, 2
 StormLord, 7, false, ACADEMY, 30, 30, 190, 10, 6, 5, 40, 70, 1
 Assassin, 1, true, DUNGEON, 4, 3, 14, 12, 5, 5, 2, 4, 7
 BlackDragon, 7, true, DUNGEON, 30, 30, 240, 10, 9, 0, 45, 70, 1
