@@ -266,12 +266,14 @@
       for (let line of lines) {
         if (!line.trim()) continue;
         const parts = line.split(",");
-        if (parts.length < 9) continue;
+        if (parts.length < 13) continue;
 
         const [
-          recName, recLevel, recAuf, recFraktion,
-          recAttack, recDefense, recLife, recInit, recSpeed
-        ] = parts.map(p => p.trim());
+      recName, recLevel, recAuf, recFraktion,
+      recAttack, recDefense, recLife, recInit, recSpeed,
+      recShots, recMinDamage, recMaxDamage, recWeeklyGrowth
+    ] = parts.map(p => p.trim());
+
 
         if (
           (nameFilter && !recName.toLowerCase().includes(nameFilter)) ||
