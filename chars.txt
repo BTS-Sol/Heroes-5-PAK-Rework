@@ -94,7 +94,7 @@ Marksman, 2, true, HEAVEN, 4, 4, 10, 8, 4, 12, 2, 8, 12
 Mastergenie, 5, true, ACADEMY, 14, 14, 45, 12, 8, 0, 14, 19, 3
 Mastergremlin, 1, true, ACADEMY, 2, 2, 6, 11, 5, 7, 1, 2, 20
 Matriarch, 6, true, DUNGEON, 20, 20, 90, 10, 4, 4, 17, 27, 2
-Matron, 6, false, DUNGEON, 18, 18, 80, 10, 4, 4, 17, 24, 2
+Matron(missing), 6, false, DUNGEON, 18, 18, 80, 10, 4, 4, 17, 24, 2
 Militiaman, 1, true, HEAVEN, 1, 2, 6, 8, 4, 0, 1, 2, 22
 Minotaur, 3, false, DUNGEON, 5, 2, 31, 8, 5, 0, 4, 7, 6
 Minotaur_Captain, 3, true, DUNGEON, 6, 5, 40, 9, 5, 0, 5, 8, 6
@@ -107,9 +107,9 @@ Obsidian_Golem, 3, true, ACADEMY, 6, 4, 20, 9, 4, 0, 5, 7, 9
 Orc_Slayer, 3, true, STRONGHOLD, 6, 4, 12, 11, 5, 0, 4, 6, 11
 Orc_Warmonger, 3, true, STRONGHOLD, 4, 6, 20, 9, 4, 0, 3, 5, 11
 Orc_Warrior, 3, false, STRONGHOLD, 5, 2, 12, 10, 4, 0, 2, 5, 11
-OrcChief1, 5, false, STRONGHOLD, 11, 8, 34, 11, 6, 0, 7, 10, 5
-OrcChief2, 5, true, STRONGHOLD, 14, 10, 40, 12, 7, 0, 8, 12, 5
-OrcchiefChieftain, 5, true, STRONGHOLD, 13, 15, 48, 12, 7, 0, 10, 12, 5
+Butcher, 5, false, STRONGHOLD, 11, 8, 34, 11, 6, 0, 7, 10, 5
+Executioner, 5, true, STRONGHOLD, 14, 10, 40, 12, 7, 0, 8, 12, 5
+Chieftain, 5, true, STRONGHOLD, 13, 15, 48, 12, 7, 0, 10, 12, 5
 Paladin, 6, true, HEAVEN, 24, 24, 100, 12, 8, 0, 20, 30, 2
 Peasant, 1, false, HEAVEN, 1, 1, 3, 8, 4, 0, 1, 1, 22
 Phoenix, 7, true, NO_TYPE, 33, 33, 150, 19, 10, 0, 30, 50, 1
@@ -124,7 +124,7 @@ Rainbow_Dragon, 7, true, PRESERVE, 30, 26, 200, 14, 9, 0, 30, 60, 1
 Rakshasa, 6, false, ACADEMY, 25, 20, 120, 9, 5, 0, 15, 23, 2
 Rakshasa_Kshatri, 6, true, ACADEMY, 27, 20, 135, 8, 7, 0, 25, 35, 2
 RakshasaRukh, 6, true, ACADEMY, 25, 20, 140, 8, 6, 0, 23, 30, 2
-Ravager, 4, true, DUNGEON, 10, 9, 60, 11, 8, 0, 7, 14, 4
+Ravager(links missing), 4, true, DUNGEON, 10, 9, 60, 11, 8, 0, 7, 14, 4
 RedDragon, 7, true, DUNGEON, 30, 30, 235, 11, 9, 0, 45, 60, 1
 Rider, 4, false, DUNGEON, 9, 7, 40, 11, 6, 0, 7, 12, 4
 RoyalGriffin, 4, true, HEAVEN, 9, 8, 35, 15, 7, 0, 5, 15, 5
