@@ -35,7 +35,7 @@ Scout, 1, false, DUNGEON, 3, 3, 10, 10, 5, 5, 2, 4, 7
 Witch, 2, false, DUNGEON, 4, 2, 16, 14, 7, 0, 5, 7, 5
 Acidic_Hydra, 5, false, DUNGEON, 15, 14, 125, 8, 5, 0, 9, 12, 3
 BlackRider, 4, false, DUNGEON, 12, 9, 60, 12, 8, 0, 7, 12, 4
-BloodWitch2, 2, false, DUNGEON, 5, 4, 21, 14, 8, 0, 3, 8, 5
+Blood_Witch, 2, false, DUNGEON, 5, 4, 21, 14, 8, 0, 3, 8, 5
 MinotaurCaptain, 3, false, DUNGEON, 6, 5, 40, 9, 5, 0, 5, 8, 6
 RedDragon, 7, false, DUNGEON, 30, 30, 235, 11, 9, 0, 45, 60, 1
 ShadowMistress, 6, false, DUNGEON, 20, 20, 100, 11, 5, 0, 20, 30, 2
