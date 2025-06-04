@@ -94,7 +94,7 @@ Marksman, 2, true, HEAVEN, 4, 4, 10, 8, 4, 12, 2, 8, 12
 Mastergenie, 5, true, ACADEMY, 14, 14, 45, 12, 8, 0, 14, 19, 3
 Mastergremlin, 1, true, ACADEMY, 2, 2, 6, 11, 5, 7, 1, 2, 20
 Matriarch, 6, true, DUNGEON, 20, 20, 90, 10, 4, 4, 17, 27, 2
-Matron(missing), 6, false, DUNGEON, 18, 18, 80, 10, 4, 4, 17, 24, 2
+Matron, 6, false, DUNGEON, 18, 18, 80, 10, 4, 4, 17, 24, 2
 Militiaman, 1, true, HEAVEN, 1, 2, 6, 8, 4, 0, 1, 2, 22
 Minotaur, 3, false, DUNGEON, 5, 2, 31, 8, 5, 0, 4, 7, 6
 Minotaur_Captain, 3, true, DUNGEON, 6, 5, 40, 9, 5, 0, 5, 8, 6
@@ -124,7 +124,7 @@ Rainbow_Dragon, 7, true, PRESERVE, 30, 26, 200, 14, 9, 0, 30, 60, 1
 Rakshasa, 6, false, ACADEMY, 25, 20, 120, 9, 5, 0, 15, 23, 2
 Rakshasa_Kshatri, 6, true, ACADEMY, 27, 20, 135, 8, 7, 0, 25, 35, 2
 RakshasaRukh, 6, true, ACADEMY, 25, 20, 140, 8, 6, 0, 23, 30, 2
-Ravager(links missing), 4, true, DUNGEON, 10, 9, 60, 11, 8, 0, 7, 14, 4
+Ravager, 4, true, DUNGEON, 10, 9, 60, 11, 8, 0, 7, 14, 4
 RedDragon, 7, true, DUNGEON, 30, 30, 235, 11, 9, 0, 45, 60, 1
 Rider, 4, false, DUNGEON, 9, 7, 40, 11, 6, 0, 7, 12, 4
 RoyalGriffin, 4, true, HEAVEN, 9, 8, 35, 15, 7, 0, 5, 15, 5
