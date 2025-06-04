@@ -116,7 +116,7 @@ Phoenix, 7, true, NO_TYPE, 33, 33, 150, 19, 10, 0, 30, 50, 1
 PitFiend, 6, false, INFERNO, 21, 21, 110, 8, 4, 0, 13, 26, 2
 Pit_Spawn, 6, true, INFERNO, 27, 23, 140, 9, 6, 0, 13, 31, 2
 Pixie, 1, false, PRESERVE, 1, 1, 5, 12, 7, 0, 1, 2, 10
-Poisonous_Wayvern, 6, true, STRONGHOLD, 19, 19, 120, 10, 7, 0, 20, 25, 2
+Paokai, 6, true, STRONGHOLD, 19, 19, 120, 10, 7, 0, 20, 25, 2
 Poltergeist, 3, true, NECROMANCY, 6, 5, 20, 9, 6, 0, 4, 6, 9
 Priest, 5, false, HEAVEN, 12, 12, 54, 10, 5, 7, 9, 12, 3
 Quasit, 1, true, INFERNO, 3, 3, 6, 13, 6, 0, 1, 4, 16
