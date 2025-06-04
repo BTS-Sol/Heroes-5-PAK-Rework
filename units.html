@@ -5,12 +5,34 @@
   <title>Heldenfilter</title>
   <style>
 
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
+   body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.light-mode {
+    background-color: #f9f9f9;
+    color: black;
+}
+
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+#toggleTheme {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+}
+
 
     .container {
       display: flex;
@@ -88,6 +110,8 @@
   </style>
 </head>
 <body>
+  <button id="toggleTheme">🌓</button>
+
 
   <div class="container">
     <div class="box" id="imageBox"></div>
@@ -475,6 +499,27 @@
         alert("Kein Charakter gefunden, der den Kriterien entspricht.");
       }
     }
+
+
+    const button = document.getElementById("toggleTheme");
+const body = document.body;
+
+// Prüfe, ob ein gespeicherter Modus existiert und setze ihn
+if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark-mode");
+} else {
+    body.classList.add("light-mode");
+}
+
+button.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    body.classList.toggle("light-mode");
+
+    // Speichere die Nutzerwahl in localStorage
+    const theme = body.classList.contains("dark-mode") ? "dark" : "light";
+    localStorage.setItem("theme", theme);
+});
+
   </script>
 
 </body>
