@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Heldenfilter</title>
   <style>
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -83,6 +84,7 @@
     th {
       background-color: #eee;
     }
+
   </style>
 </head>
 <body>
@@ -167,55 +169,60 @@
         </select>
       </div>
       <div class="row">
-  <label>Schüsse:</label>
-  <input id="shots" type="number" min="0">
-  <select id="shots_comp">
-    <option value="=">=</option>
-    <option value=">=">>=</option>
-    <option value="<="><=</option>
-  </select>
-</div>
+        <label>Schüsse:</label>
+        <input id="shots" type="number" min="0">
+        <select id="shots_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
 
-<div class="row">
-  <label>Min. Schaden:</label>
-  <input id="minDamage" type="number" min="0">
-  <select id="minDamage_comp">
-    <option value="=">=</option>
-    <option value=">=">>=</option>
-    <option value="<="><=</option>
-  </select>
-</div>
+      <div class="row">
+        <label>Min. Schaden:</label>
+        <input id="minDamage" type="number" min="0">
+        <select id="minDamage_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
 
-<div class="row">
-  <label>Max. Schaden:</label>
-  <input id="maxDamage" type="number" min="0">
-  <select id="maxDamage_comp">
-    <option value="=">=</option>
-    <option value=">=">>=</option>
-    <option value="<="><=</option>
-  </select>
-</div>
+      <div class="row">
+        <label>Max. Schaden:</label>
+        <input id="maxDamage" type="number" min="0">
+        <select id="maxDamage_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
 
-<div class="row">
-  <label>Wöchentliche Zuwachsrate:</label>
-  <input id="weeklyGrowth" type="number" min="0">
-  <select id="weeklyGrowth_comp">
-    <option value="=">=</option>
-    <option value=">=">>=</option>
-    <option value="<="><=</option>
-  </select>
-</div>
+      <div class="row">
+        <label>Wöchentliche Zuwachsrate:</label>
+        <input id="weeklyGrowth" type="number" min="0">
+        <select id="weeklyGrowth_comp">
+          <option value="=">=</option>
+          <option value=">=">>=</option>
+          <option value="<="><=</option>
+        </select>
+      </div>
 
-     <div style="display: flex; gap: 10px;">
-  <button onclick="suchen()">Suchen</button>
-  <button onclick="resetFields()">Felder leeren</button>
-  </div>
-
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="suchen()">Suchen</button>
+        <button onclick="resetFields()">Felder leeren</button>
+      </div>
     </div>
   </div>
+
   <div id="resultsTable" style="padding: 20px 40px;"></div>
 
   <script>
+    // Globale Variablen zum Speichern der aktuellen Datensätze und Sortierzustände
+    let currentRecords = [];
+    let currentSortKey = null;
+    let currentSortOrder = 1; // 1 = aufsteigend, -1 = absteigend
+
     function compareNumber(actual, filter, comp) {
       if (filter === "") return true;
       actual = parseFloat(actual);
@@ -227,6 +234,7 @@
         default: return true;
       }
     }
+
     function resetFields() {
       document.querySelectorAll("input, select").forEach(field => {
         if (field.tagName === "SELECT") {
@@ -235,9 +243,132 @@
           field.value = "";
         }
       });
-    
       document.getElementById("imageBox").innerHTML = "";
       document.getElementById("resultsTable").innerHTML = "";
+      currentRecords = [];
+      currentSortKey = null;
+      currentSortOrder = 1;
+    }
+
+    // Funktion, um einen Datensatz (Record) in das Anzeigefeld (Form + Bild) zu laden
+    function displayRecord(rec) {
+      const imageBox = document.getElementById("imageBox");
+      imageBox.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = `images/${rec.name}.png`;
+      img.alt = rec.name;
+      imageBox.appendChild(img);
+
+      // Formularfelder mit den Werten füllen
+      document.getElementById("name").value = rec.name;
+      document.getElementById("level").value = rec.level;
+      document.getElementById("auf").value = rec.auf;
+      document.getElementById("fraktion").value = rec.fraktion;
+      document.getElementById("attack").value = rec.attack;
+      document.getElementById("defense").value = rec.defense;
+      document.getElementById("life").value = rec.life;
+      document.getElementById("init").value = rec.init;
+      document.getElementById("speed").value = rec.speed;
+      document.getElementById("shots").value = rec.shots;
+      document.getElementById("minDamage").value = rec.minDamage;
+      document.getElementById("maxDamage").value = rec.maxDamage;
+      document.getElementById("weeklyGrowth").value = rec.weeklyGrowth;
+    }
+
+    // Funktion, die den aktuellen Datensatz-Array nach einem Schlüssel sortiert und die Tabelle neu rendert
+    function sortByKey(key) {
+      if (currentSortKey === key) {
+        // Wenn bereits nach diesem Schlüssel sortiert, dann Reihenfolge umkehren
+        currentSortOrder *= -1;
+      } else {
+        currentSortKey = key;
+        currentSortOrder = 1; // aufsteigend
+      }
+      currentRecords.sort((a, b) => {
+        const aVal = a[key];
+        const bVal = b[key];
+        const aNum = parseFloat(aVal);
+        const bNum = parseFloat(bVal);
+        let comparison = 0;
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          comparison = aNum - bNum;
+        } else {
+          comparison = aVal.toString().localeCompare(bVal.toString(), undefined, { numeric: true });
+        }
+        return comparison * currentSortOrder;
+      });
+      renderTable();
+    }
+
+    // Funktion, die das Table-HTML basierend auf currentRecords erzeugt
+    function renderTable() {
+      const tableContainer = document.getElementById("resultsTable");
+      tableContainer.innerHTML = "";
+
+      if (currentRecords.length === 0) return;
+
+      const table = document.createElement("table");
+      const headers = [
+        { label: "Name", key: "name" },
+        { label: "Level", key: "level" },
+        { label: "Aufrüstung", key: "auf" },
+        { label: "Fraktion", key: "fraktion" },
+        { label: "Angriff", key: "attack" },
+        { label: "Verteidigung", key: "defense" },
+        { label: "Leben", key: "life" },
+        { label: "Initiative", key: "init" },
+        { label: "Schnelligkeit", key: "speed" },
+        { label: "Schüsse", key: "shots" },
+        { label: "Min. Schaden", key: "minDamage" },
+        { label: "Max. Schaden", key: "maxDamage" },
+        { label: "Wöchentlicher Zuwachs", key: "weeklyGrowth" }
+      ];
+
+      // THEAD mit klickbaren Th-Elementen zum Sortieren
+      const thead = document.createElement("thead");
+      const trHead = document.createElement("tr");
+      headers.forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header.label;
+        // Sortier-Klasse setzen, falls gerade nach diesem Schlüssel sortiert wird
+        if (currentSortKey === header.key) {
+          th.classList.add(currentSortOrder === 1 ? "sort-asc" : "sort-desc");
+        }
+        th.addEventListener("click", () => {
+          sortByKey(header.key);
+        });
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+      table.appendChild(thead);
+
+      // TBODY mit allen Datensätzen (inkl. erstem "Found"-Record)
+      const tbody = document.createElement("tbody");
+      currentRecords.forEach((rec, index) => {
+        const row = document.createElement("tr");
+        headers.forEach((header, colIndex) => {
+          const td = document.createElement("td");
+          const val = rec[header.key];
+          if (colIndex === 0) {
+            // Name in erster Spalte als klickbarer Link (blue underlined)
+            const a = document.createElement("a");
+            a.textContent = val;
+            a.href = "#";
+            a.classList.add("name-link");
+            a.addEventListener("click", (e) => {
+              e.preventDefault();
+              displayRecord(currentRecords[index]);
+            });
+            td.appendChild(a);
+          } else {
+            td.textContent = val;
+          }
+          row.appendChild(td);
+        });
+        tbody.appendChild(row);
+      });
+      table.appendChild(tbody);
+      tableContainer.appendChild(table);
     }
 
     async function suchen() {
@@ -264,18 +395,20 @@
 
       const speedFilter = document.getElementById("speed").value;
       const speedComp = document.getElementById("speed_comp").value;
-      
+
       const shotsFilter = document.getElementById("shots").value;
       const shotsComp = document.getElementById("shots_comp").value;
-      
+
       const minDamageFilter = document.getElementById("minDamage").value;
       const minDamageComp = document.getElementById("minDamage_comp").value;
-      
+
       const maxDamageFilter = document.getElementById("maxDamage").value;
       const maxDamageComp = document.getElementById("maxDamage_comp").value;
-      
+
       const weeklyGrowthFilter = document.getElementById("weeklyGrowth").value;
       const weeklyGrowthComp = document.getElementById("weeklyGrowth_comp").value;
+
+      // Lokales Array sammeln
       const matchingRecords = [];
 
       for (let line of lines) {
@@ -284,12 +417,12 @@
         if (parts.length < 13) continue;
 
         const [
-      recName, recLevel, recAuf, recFraktion,
-      recAttack, recDefense, recLife, recInit, recSpeed,
-      recShots, recMinDamage, recMaxDamage, recWeeklyGrowth
-    ] = parts.map(p => p.trim());
+          recName, recLevel, recAuf, recFraktion,
+          recAttack, recDefense, recLife, recInit, recSpeed,
+          recShots, recMinDamage, recMaxDamage, recWeeklyGrowth
+        ] = parts.map(p => p.trim());
 
-
+        // Filterbedingungen prüfen
         if (
           (nameFilter && !recName.toLowerCase().includes(nameFilter)) ||
           (levelFilter && recLevel !== levelFilter) ||
@@ -323,61 +456,21 @@
         });
       }
 
+      // In globale Variable speichern (für Sortierung und Klick)
+      currentRecords = matchingRecords;
+      currentSortKey = null;
+      currentSortOrder = 1;
+
       const imageBox = document.getElementById("imageBox");
       const tableContainer = document.getElementById("resultsTable");
       tableContainer.innerHTML = "";
       imageBox.innerHTML = "";
 
       if (matchingRecords.length > 0) {
-        const found = matchingRecords[0];
-        const img = document.createElement("img");
-        img.src = `images/${found.name}.png`;
-        img.alt = found.name;
-        imageBox.appendChild(img);
-
-        document.getElementById("name").value = found.name;
-        document.getElementById("level").value = found.level;
-        document.getElementById("auf").value = found.auf;
-        document.getElementById("fraktion").value = found.fraktion;
-        document.getElementById("attack").value = found.attack;
-        document.getElementById("defense").value = found.defense;
-        document.getElementById("life").value = found.life;
-        document.getElementById("init").value = found.init;
-        document.getElementById("speed").value = found.speed;
-        document.getElementById("shots").value = found.shots;
-        document.getElementById("minDamage").value = found.minDamage;
-        document.getElementById("maxDamage").value = found.maxDamage;
-        document.getElementById("weeklyGrowth").value = found.weeklyGrowth;
-
-
-        if (matchingRecords.length > 1) {
-          const table = document.createElement("table");
-
-          const headers = ["Name", "Level", "Aufrüstung", "Fraktion", "Angriff", "Verteidigung", "Leben", "Initiative", "Schnelligkeit", "Schüsse", "Min. Schaden", "Max. Schaden", "Wöchentlicher Zuwachs"];
-         const thead = document.createElement("thead");
-          const tr = document.createElement("tr");
-          headers.forEach(h => {
-            const th = document.createElement("th");
-            th.textContent = h;
-            tr.appendChild(th);
-          });
-          thead.appendChild(tr);
-          table.appendChild(thead);
-
-          const tbody = document.createElement("tbody");
-          matchingRecords.slice(1).forEach(rec => {
-            const row = document.createElement("tr");
-            Object.values(rec).forEach(val => {
-              const td = document.createElement("td");
-              td.textContent = val;
-              row.appendChild(td);
-            });
-            tbody.appendChild(row);
-          });
-          table.appendChild(tbody);
-
-          tableContainer.appendChild(table);
-        }
+        // Erstes Ergebnis direkt anzeigen
+        displayRecord(matchingRecords[0]);
+        // Gesamte Tabelle rendern (inkl. ersten Elements)
+        renderTable();
       } else {
         alert("Kein Charakter gefunden, der den Kriterien entspricht.");
       }
