@@ -166,6 +166,45 @@
           <option value="<="><=</option>
         </select>
       </div>
+      <div class="row">
+  <label>Schüsse:</label>
+  <input id="shots" type="number" min="0">
+  <select id="shots_comp">
+    <option value="=">=</option>
+    <option value=">=">>=</option>
+    <option value="<="><=</option>
+  </select>
+</div>
+
+<div class="row">
+  <label>Min. Schaden:</label>
+  <input id="minDamage" type="number" min="0">
+  <select id="minDamage_comp">
+    <option value="=">=</option>
+    <option value=">=">>=</option>
+    <option value="<="><=</option>
+  </select>
+</div>
+
+<div class="row">
+  <label>Max. Schaden:</label>
+  <input id="maxDamage" type="number" min="0">
+  <select id="maxDamage_comp">
+    <option value="=">=</option>
+    <option value=">=">>=</option>
+    <option value="<="><=</option>
+  </select>
+</div>
+
+<div class="row">
+  <label>Wöchentliche Zuwachsrate:</label>
+  <input id="weeklyGrowth" type="number" min="0">
+  <select id="weeklyGrowth_comp">
+    <option value="=">=</option>
+    <option value=">=">>=</option>
+    <option value="<="><=</option>
+  </select>
+</div>
 
       <button onclick="suchen()">Suchen</button>
     </div>
@@ -210,7 +249,18 @@
 
       const speedFilter = document.getElementById("speed").value;
       const speedComp = document.getElementById("speed_comp").value;
-
+      
+      const shotsFilter = document.getElementById("shots").value;
+      const shotsComp = document.getElementById("shots_comp").value;
+      
+      const minDamageFilter = document.getElementById("minDamage").value;
+      const minDamageComp = document.getElementById("minDamage_comp").value;
+      
+      const maxDamageFilter = document.getElementById("maxDamage").value;
+      const maxDamageComp = document.getElementById("maxDamage_comp").value;
+      
+      const weeklyGrowthFilter = document.getElementById("weeklyGrowth").value;
+      const weeklyGrowthComp = document.getElementById("weeklyGrowth_comp").value;
       const matchingRecords = [];
 
       for (let line of lines) {
@@ -232,7 +282,11 @@
           !compareNumber(recDefense, defenseFilter, defenseComp) ||
           !compareNumber(recLife, lifeFilter, lifeComp) ||
           !compareNumber(recInit, initFilter, initComp) ||
-          !compareNumber(recSpeed, speedFilter, speedComp)
+          !compareNumber(recSpeed, speedFilter, speedComp) ||
+          !compareNumber(recShots, shotsFilter, shotsComp) ||
+          !compareNumber(recMinDamage, minDamageFilter, minDamageComp) ||
+          !compareNumber(recMaxDamage, maxDamageFilter, maxDamageComp) ||
+          !compareNumber(recWeeklyGrowth, weeklyGrowthFilter, weeklyGrowthComp)
         ) continue;
 
         matchingRecords.push({
@@ -273,8 +327,8 @@
         if (matchingRecords.length > 1) {
           const table = document.createElement("table");
 
-          const headers = ["Name", "Level", "Aufrüstung", "Fraktion", "Angriff", "Verteidigung", "Leben", "Initiative", "Schnelligkeit"];
-          const thead = document.createElement("thead");
+          const headers = ["Name", "Level", "Aufrüstung", "Fraktion", "Angriff", "Verteidigung", "Leben", "Initiative", "Schnelligkeit", "Schüsse", "Min. Schaden", "Max. Schaden", "Wöchentlicher Zuwachs"];
+         const thead = document.createElement("thead");
           const tr = document.createElement("tr");
           headers.forEach(h => {
             const th = document.createElement("th");
