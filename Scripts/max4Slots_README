@@ -8,9 +8,9 @@ Die LUA-Script-Engine von **HOMM5 (inkl. Hammers of Fate / Tribes of the East)**
 
 Aber du kannst **über Events, Regionen oder Objektinteraktionen** erkennen, **wann ein Held in einen Kampf verwickelt wird**, z. B.:
 
-* Ein Held **berührt ein neutrales Monster** (OBJECT\_TOUCH\_TRIGGER).
-* Ein Held **tritt in eine Region** (REGION\_ENTER...).
-* Ein Held **greift eine Stadt an** (TOWN\_HERO\_DEPLOY\_TRIGGER).
+* Ein Held **berührt ein neutrales Monster** (OBJECT_TOUCH_TRIGGER).
+* Ein Held **tritt in eine Region** (REGION_ENTER...).
+* Ein Held **greift eine Stadt an** (TOWN_HERO_DEPLOY_TRIGGER).
 
 Dort kannst du dann **manuell** deinen Kampfbeginn-Handler aufrufen.
 
@@ -18,7 +18,7 @@ Dort kannst du dann **manuell** deinen Kampfbeginn-Handler aufrufen.
 
 ## ✅ So nutzt du einen Pseudo-CombatStart:
 
-### 🔁 Variante A: Kampfbeginn über OBJECT\_TOUCH\_TRIGGER
+### 🔁 Variante A: Kampfbeginn über OBJECT_TOUCH_TRIGGER
 
 **Verwende diesen Trigger**, wenn du erkennst: „Ein Held hat ein Objekt berührt → es folgt gleich ein Kampf.“
 
@@ -36,7 +36,7 @@ Das funktioniert **z. B. bei neutralen Armeen, Arenen oder Obelisken**.
 
 ---
 
-### 🔁 Variante B: REGION\_ENTER\_AND\_STOP\_TRIGGER
+### 🔁 Variante B: REGION_ENTER_AND\_STOP\_TRIGGER
 
 Wenn du **vor einem Kampfgebiet (z. B. Golem-Wache, Bosszone)** eine **Region legst**, kannst du exakt dann den Slot-Check auslösen:
 
