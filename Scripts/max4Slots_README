@@ -1,0 +1,88 @@
+Sehr gern – hier kommt eine **genaue und praxisnahe Erklärung**, wie du den **Kampfbeginn-Trigger ("CombatStart")** **in HOMM5-Scripts einbaust**, obwohl das Spiel **keine native „OnCombatStart“-Funktion in der Lua-API** anbietet:
+
+---
+
+## 🧠 Hintergrund: Kein direkter "CombatStart"-Event
+
+Die LUA-Script-Engine von **HOMM5 (inkl. Hammers of Fate / Tribes of the East)** bietet **keinen systemweiten `COMBAT_START_TRIGGER`** wie z. B. `NEW_DAY_TRIGGER`.
+
+Aber du kannst **über Events, Regionen oder Objektinteraktionen** erkennen, **wann ein Held in einen Kampf verwickelt wird**, z. B.:
+
+* Ein Held **berührt ein neutrales Monster** (OBJECT\_TOUCH\_TRIGGER).
+* Ein Held **tritt in eine Region** (REGION\_ENTER...).
+* Ein Held **greift eine Stadt an** (TOWN\_HERO\_DEPLOY\_TRIGGER).
+
+Dort kannst du dann **manuell** deinen Kampfbeginn-Handler aufrufen.
+
+---
+
+## ✅ So nutzt du einen Pseudo-CombatStart:
+
+### 🔁 Variante A: Kampfbeginn über OBJECT\_TOUCH\_TRIGGER
+
+**Verwende diesen Trigger**, wenn du erkennst: „Ein Held hat ein Objekt berührt → es folgt gleich ein Kampf.“
+
+### Beispiel:
+
+```lua
+function OnObjectTouch(heroName, objectName)
+    CombatStartTrigger(heroName)
+end
+
+Trigger(OBJECT_TOUCH_TRIGGER, "OnObjectTouch")
+```
+
+Das funktioniert **z. B. bei neutralen Armeen, Arenen oder Obelisken**.
+
+---
+
+### 🔁 Variante B: REGION\_ENTER\_AND\_STOP\_TRIGGER
+
+Wenn du **vor einem Kampfgebiet (z. B. Golem-Wache, Bosszone)** eine **Region legst**, kannst du exakt dann den Slot-Check auslösen:
+
+```lua
+function OnRegionEnter(heroName, regionName)
+    CombatStartTrigger(heroName)
+end
+
+Trigger(REGION_ENTER_AND_STOP_TRIGGER, "OnRegionEnter")
+```
+
+Lege im Editor einfach eine unsichtbare Region auf das Feld **vor dem Kampf**, gib ihr einen Namen (z. B. `"REGION_COMBAT_PRECHECK"`) und das Script macht den Rest.
+
+---
+
+### 📌 Was passiert dann?
+
+Die Funktion `CombatStartTrigger(heroName)` aus deinem Hauptscript:
+
+```lua
+function CombatStartTrigger(heroName)
+    EnforceSlotLimit(heroName) -- entfernt überzählige Einheiten
+end
+```
+
+...wird **direkt aufgerufen, bevor der Kampf beginnt**, sodass du den **Helden noch „bereinigen“ kannst**, bevor er mit 5+ Einheiten kämpft.
+
+---
+
+## 🧱 Einschränkung
+
+Wenn ein Held **auf der Weltkarte direkt einen Gegner angreift**, **ohne dass ein Script-gebundener Trigger feuert**, wird dein Script **nicht automatisch aktiv**. Deshalb musst du:
+
+* **bekannte Kampfstellen mit Triggerzonen** sichern, oder
+* den Mechanismus eher als **präventive Maßnahme (z. B. per `NewDayTrigger`)** einsetzen.
+
+---
+
+## 💡 Empfehlung zur Kombination
+
+Nutze die folgende Kombination:
+
+* `NewDayTrigger` → automatische Bereinigung täglich
+* `MonitorHeroes` → alle 10 Sekunden Warnung bei zu vielen Slots
+* `CombatStartTrigger(hero)` → **manuell aus Events oder Regionen aufrufen**, wenn du Kämpfe kontrollieren willst
+
+---
+
+Wenn du willst, baue ich dir gern eine Testkarte oder sende dir eine `.lua` mit einem konkreten Beispiel (Region & Touch-Trigger vor neutraler Einheit). Möchtest du das?
