@@ -1,0 +1,43 @@
+import os
+import glob
+import xml.etree.ElementTree as ET
+
+def main():
+    # Eingabe: Pfad zum Ordner X
+    ordner_pfad = input("Gib den Pfad zum Ordner ein (X): ").strip()
+    if not os.path.isdir(ordner_pfad):
+        print("Ungültiger Ordnerpfad.")
+        return
+
+    # Eingabe: Tag Y
+    tag_y = input("Gib den Tag-Namen ein (Y): ").strip()
+    if not tag_y:
+        print("Ungültiger Tag.")
+        return
+
+    # Alle .xdb-Dateien im Ordner auflisten
+    xdb_dateien = glob.glob(os.path.join(ordner_pfad, "*.xdb"))
+    if not xdb_dateien:
+        print("Keine .xdb-Dateien im angegebenen Ordner gefunden.")
+        return
+
+    print(f"\nGefundene .xdb-Dateien: {len(xdb_dateien)}\n")
+
+    # Jede Datei einlesen und Tag Y extrahieren
+    for dateipfad in xdb_dateien:
+        print(f"Datei: {os.path.basename(dateipfad)}")
+        try:
+            tree = ET.parse(dateipfad)
+            root = tree.getroot()
+            element = root.find(".//" + tag_y)
+            if element is not None and element.text is not None:
+                print(f"  <{tag_y}> Inhalt: {element.text.strip()}")
+            else:
+                print(f"  Tag <{tag_y}> nicht gefunden oder leer.")
+        except ET.ParseError:
+            print("  Fehler beim Parsen der XML-Datei.")
+        except Exception as e:
+            print(f"  Fehler: {e}")
+
+if __name__ == "__main__":
+    main()
