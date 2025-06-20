@@ -13,3 +13,11 @@ Inhaltsverzeichnis:
 Beobachtung: *.h5p enpacken -> verändern des Angriffs auf 200 -> Hero wird NICHT geladen
 
 Custom-Helden sind immer Spieler_0, die Basehelden je nach Fraktion
+
+Base-Helden:
++ Exp erhöhen
++ Stats erhöhen
++ beliebige Einheiten 
+
+- 
+- Basisbefähigungen
