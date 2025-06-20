@@ -1,6 +1,6 @@
 Inhaltsverzeichnis:
 1. Unterschied zur .h5u-Datei im UserMODs-Ordner
-2.
+2. Custom-Duellhelden
 3.
 
 
@@ -8,3 +8,8 @@ Inhaltsverzeichnis:
 
 .h5u-Dateien (Spiel-Mods) gehören typischerweise in den UserMODs-Ordner (ebenfalls im Installationsverzeichnis) – dort erkennt das Spiel benutzerdefinierte Kampagnen oder Skripte 
 .pak-Dateien hingegen ersetzen oder ergänzen Spieldaten (Grafik, Sound, Karten) und müssen direkt in data/ abgelegt werden
+
+2. Custom-Duellhelden
+Beobachtung: *.h5p enpacken -> verändern des Angriffs auf 200 -> Hero wird NICHT geladen
+
+Custom-Helden sind immer Spieler_0, die Basehelden je nach Fraktion
