@@ -11,4 +11,6 @@ Beschreibung und Name ging bei denen jetzt...
 - map scripts
 - adding creatures/spells possib?
 - duellhelden überarbeiten
-- neuen angriff designen 
+- neuen angriff designen
+
+PAK\GameMechanics\Creature\Creatures  <- Unit XDBs, stats, fähigkeiten, etc. 
