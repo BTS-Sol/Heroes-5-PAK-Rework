@@ -17,7 +17,9 @@ Custom-Helden sind immer Spieler_0, die Basehelden je nach Fraktion
 Base-Helden:
 + Exp erhöhen
 + Stats erhöhen
-+ beliebige Einheiten 
++ beliebige Einheiten
++ icons über Editor importieren & dann neuen Unterordner bei den Helden erstellen.
++ mehr Befähigungen als maximal möglich einfügbar (sind auch aktiv)
 
 - 
 - Basisbefähigungen
