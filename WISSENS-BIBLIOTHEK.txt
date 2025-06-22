@@ -23,3 +23,73 @@ Base-Helden:
 
 - 
 - Basisbefähigungen
+
+
+Beispiel Lua Code mit Anmerkungen (die sind sonst oft auch einfach Russisch)
+
+--*-- QUEST 2: Get the reinforcements from allies.
+--*-- QUEST 2 DESCRIPTION: The ally hero with reinforcements will appear on the map on 21-th day of the game. IF this hero reaches player's town, he will change his owner and will go under player's control.
+
+---------------------------------------------------------------------------------------------------
+-- Function Name: f_deploy_ally_help()
+-- Description: This function places ally AI hero on the map and orders him to go to player's town.
+---------------------------------------------------------------------------------------------------
+DAY_TO_ALLY_DEPLOY = 20
+ALLY_CHANGED_OWNER = 0;
+function f_deploy_ally_help()
+	if (GetDate( DAY ) == DAY_TO_ALLY_DEPLOY) then
+		startThread( VoiceOver4 );
+--*-- This function part describes the starting location of ally AI hero --*--
+		local START_X = 90;
+		local START_Y = 1;
+		local START_FLOOR = 0;
+		
+		MessageBox("/Maps/SingleMissions/A2S4/messagebox_007.txt");
+		if (IsObjectExists(HERO_NAME_ALLY_01) ~= 1) then
+			DeployReserveHero(HERO_NAME_ALLY_01, START_X, START_Y, START_FLOOR);
+			sleep(10);
+			EnableHeroAI(HERO_NAME_ALLY_01, nil);
+			sleep(10);
+			MoveHero( HERO_NAME_ALLY_01,  75, 69, 0 );
+			startThread( VoiceOver5Starter );
+		else
+			--print_to('=Logfile_A2S4=.txt',"Ally AI Hero is already deployed!");
+		end;
+		
+		startThread( f_ally_change_owner );
+	else
+		--print_to('=Logfile_A2S4=.txt',"It's not the time to deploy ally hero!");
+	end;
+end;
+
+function VoiceOver4()
+	Play2DSound( "/Maps/SingleMissions/A2S4/SM4_VO4_Agrael_01sound.xdb#xpointer(/Sound)" );
+end;
+
+---------------------------------------------------------------------------------------------------
+-- Function Name: f_ally_change_owner()
+-- Description: This function changes the ownership of ally AI hero when he reaches player's town.
+---------------------------------------------------------------------------------------------------
+
+hx = 0;
+hy = 0;
+hlevel = 0;
+
+function f_ally_change_owner()
+	while (ALLY_CHANGED_OWNER ~= 1) do
+		sleep( 10 );
+		if (IsObjectInRegion(HERO_NAME_ALLY_01, 'REGION_CHANGE_OWNER') == 1) then
+			if (GetCurrentPlayer() ~= 3) then
+				hx,hy,hlevel = GetObjectPosition( HERO_NAME_PLAYER );
+				--print_to('=Logfile_A2S4=.txt',"Now plays player ", GetCurrentPlayer());
+				SetObjectOwner(HERO_NAME_ALLY_01, 1);
+				SetObjectPosition( HERO_NAME_PLAYER, 75, 70, GROUND );
+				--print_to('=Logfile_A2S4=.txt',"Hero ", HERO_NAME_ALLY_01, " has changed owner to player 1");
+				ALLY_CHANGED_OWNER = 1;
+				MessageBox("/Maps/SingleMissions/A2S4/messagebox_008.txt", "PlaySceneAllyArrived");
+			else
+				--print_to('=Logfile_A2S4=.txt',"AI's TURN! CANNOT CHANGE OWNER!");
+			end;
+		end;
+	end;
+end;
