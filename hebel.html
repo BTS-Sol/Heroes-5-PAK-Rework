@@ -1,3 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Long Knockout Praxis-Rechner</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f4f6f8;
+      color: #333;
+    }
+    h1 { font-size: 24px; margin-bottom: 20px; color: #111; }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .card h3 { margin-top: 0; color: #1f6feb; border-bottom: 2px solid #f4f6f8; padding-bottom: 10px; }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #1f6feb;
+      outline: none;
+    }
+    .highlight-input {
+      border: 1px solid #1f6feb;
+      background-color: #f0f7ff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .result {
+      background: #f8fbff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border-left: 4px solid #1f6feb;
+      line-height: 1.6;
+    }
+
+    .danger-box {
+      background: #fff0f0;
+      border-left: 4px solid #d73a49;
+      color: #d73a49;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    .profit { color: #28a745; font-weight: bold; }
+    .loss { color: #d73a49; font-weight: bold; }
+    .info { font-size: 0.85em; color: #666; margin-top: 2px; display: block; }
+    .premium-info { color: #856404; font-size: 0.9em; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<h1>Long Knockout Praxis-Rechner</h1>
+
+<div id="calculator">
+  
+  <div class="card">
+    <h3>1. Deine Realdaten (Broker)</h3>
+    <div class="row">
+      <div class="input-group">
+        <label>Anzahl Zertifikate</label>
+        <input id="qty" type="number" value="1000" step="any">
+      </div>
+      <div class="input-group">
+        <label>Dein Kaufkurs Zertifikat (€)</label>
+        <span class="info">Dein tatsächlicher Einstiegspreis</span>
+        <input id="entryCert" type="number" value="1.50" step="any">
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-group">
+        <label>Aktueller Preis Zertifikat (€)</label>
+        <span class="info">Aktueller Kurs laut deinem Broker</span>
+        <input id="currentCertPrice" class="highlight-input" type="number" value="1.55" step="any">
+      </div>
+      <div class="input-group">
+        <label>Aktueller Kurs Basiswert (€)</label>
+        <span class="info">Kurs der Aktie/des Index</span>
+        <input id="priceUnderlying" type="number" value="160" step="any">
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-group">
+        <label>Knockout-Level Basiswert (€)</label>
+        <input id="ko" type="number" value="145" step="any">
+      </div>
+      <div class="input-group">
+        <label>Bezugsverhältnis</label>
+        <span class="info">Z.B. 0.1, 0.01 oder 1</span>
+        <input id="ratio" type="number" value="0.1" step="any">
+      </div>
+    </div>
+    <div id="out1"></div>
+  </div>
+
+  <div class="card">
+    <h3>2. Nachkauf (DCA) simulieren</h3>
+    <div class="row">
+      <div class="input-group">
+        <label>Wenn Basiswert fällt auf (€)</label>
+        <input id="buyPriceUnderlying" type="number" value="155" step="any">
+      </div>
+      <div class="input-group">
+        <label>Nachkauf Anzahl Zertifikate</label>
+        <input id="buyQty" type="number" value="500" step="any">
+      </div>
+    </div>
+    <div id="out2"></div>
+  </div>
+
+  <div class="card">
+    <h3>3. Zielkurs simulieren</h3>
+    <div class="input-group">
+      <label>Zielkurs Basiswert (€)</label>
+      <input id="targetUnderlying" type="number" value="180" step="any">
+    </div>
+    <div id="out3"></div>
+  </div>
+
+</div>
+
 <script>
 function formatMoney(value) {
   const formatted = value.toFixed(2) + " €";
@@ -115,3 +271,6 @@ function calc() {
 document.getElementById("calculator").addEventListener("input", calc);
 calc();
 </script>
+
+</body>
+</html>
