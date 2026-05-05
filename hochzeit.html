@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hochzeit Robert & Amelia</title>
+
+    <!-- Google Fonts für ein edles Design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #9b88ed; /* Sanftes Lavendel */
+            --secondary: #c5a059; /* Edles Gold/Beige */
+            --bg-color: #faf9f5; /* Cremeweiß */
+            --text-dark: #3a3a3a;
+            --text-light: #6a6a6a;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Startscreen / Hero Section */
+        #startscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            cursor: pointer;
+            z-index: 100;
+            transition: opacity 1.2s ease-in-out;
+            background-color: #000;
+        }
+
+        #startscreen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7; /* Leicht abgedunkelt für bessere Lesbarkeit des Textes */
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .overlay-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .overlay-details {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        .enter-btn {
+            font-family: 'Montserrat', sans-serif;
+            border: 1px solid white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .enter-btn:hover {
+            background: white;
+            color: var(--text-dark);
+        }
+
+        /* Content Area */
+        #content {
+            display: none; /* Wird via JS auf block gesetzt */
+            opacity: 0; /* Für den Fade-In Effekt */
+            padding: 80px 20px;
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.8;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .section-divider {
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+            margin: 30px auto 40px auto;
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        img.content-img {
+            width: 100%;
+            margin: 50px 0;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        /* Elegante Timeline für den Tagesplan */
+        .timeline {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .timeline li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed #e0dcd3;
+        }
+
+        .timeline li:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            font-weight: 500;
+            color: var(--secondary);
+            width: 40%;
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .event {
+            width: 60%;
+            padding-left: 20px;
+            border-left: 2px solid var(--primary);
+        }
+
+        /* Buffet Menu */
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .menu-list li {
+            padding: 10px 0;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            position: relative;
+        }
+
+        .menu-list li::after {
+            content: '•';
+            color: var(--secondary);
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        .menu-list li:last-child::after {
+            content: ''; /* Letzter Punkt braucht keinen Trenner */
+        }
+
+        /* Keyframes für weiche Animationen */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 600px) {
+            .overlay-title { font-size: 3.5rem; }
+            .overlay-details { font-size: 0.9rem; }
+            .time { text-align: left; width: 100%; padding: 0 0 5px 0; }
+            .event { width: 100%; padding-left: 0; border-left: none; }
+            .timeline li { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Startscreen -->
+    <div id="startscreen" onclick="showContent()">
+        <!-- Hintergrundbild -->
+        <img src="lavenda1.png" alt="Lavendelhaus">
+        
+        <div class="overlay-container">
+            <div class="overlay-title">Robert & Amelia</div>
+            <div class="overlay-details">
+                Lavendelhaus | Parkstr. 3, 12033 Berlin <br>
+                Ab 14:00 Uhr
+            </div>
+            <div class="enter-btn">Einladung öffnen</div>
+        </div>
+    </div>
+
+    <!-- Inhalt -->
+    <div id="content">
+        <h1 style="font-size: 2.5rem;">Wir heiraten</h1>
+        <div class="section-divider"></div>
+
+        <p class="intro-text">
+            Wir laden euch von Herzen ein, diesen besonderen Tag mit uns zu feiern. 
+            Gemeinsam möchten wir Liebe, Freude und unvergessliche Momente teilen. <br><br>
+            Lasst uns zusammen lachen, tanzen und das Leben genießen – 
+            in einer Atmosphäre voller Wärme und Glück. Wir freuen uns sehr, euch an unserer Seite zu haben.
+        </p>
+
+        <div class="signature">
+            Robert & Amelia
+        </div>
+
+        <img src="lavenda2.png" class="content-img" alt="Lavendelbild">
+
+        <h2 style="font-size: 2rem; margin-top: 40px;">Tagesplan</h2>
+        <div class="section-divider"></div>
+        
+        <ul class="timeline">
+            <li><span class="time">14:00 – 15:00</span> <span class="event">Sektempfang</span></li>
+            <li><span class="time">15:00 – 16:30</span> <span class="event">Freie Trauung</span></li>
+            <li><span class="time">16:30 – 17:30</span> <span class="event">Spiele & Freizeit</span></li>
+            <li><span class="time">17:30 – 19:00</span> <span class="event">Festliches Buffet</span></li>
+            <li><span class="time">Ab 20:00</span> <span class="event">Musik, Tanz & Open End</span></li>
+        </ul>
+
+        <h2 style="font-size: 2rem; margin-top: 60px;">Buffet</h2>
+        <div class="section-divider"></div>
+
+        <ul class="menu-list">
+            <li>Frische Sommersalate & Antipasti-Kreationen</li>
+            <li>Ausgewählte vegetarische Spezialitäten</li>
+            <li>Zarte Geflügel- und Fleischgerichte</li>
+            <li>Vielfältige Beilagen & hausgemachte Brotvariationen</li>
+            <li>Dessert-Träume & süße Köstlichkeiten</li>
+        </ul>
+    </div>
+
+    <script>
+        function showContent() {
+            const startscreen = document.getElementById("startscreen");
+            const content = document.getElementById("content");
+
+            // Sanftes Ausblenden des Startscreens
+            startscreen.style.opacity = "0";
+
+            // Warten, bis Fade-Out fertig ist (1.2s = 1200ms)
+            setTimeout(() => {
+                startscreen.style.display = "none"; // Aus dem DOM Layout entfernen
+                content.style.display = "block"; // Content Platz nehmen lassen
+                
+                // Kurze Verzögerung, damit der Browser das Rendering aktualisiert, bevor der Fade-In startet
+                setTimeout(() => {
+                    content.style.opacity = "1";
+                }, 50);
+
+                window.scrollTo(0, 0); // Sicherstellen, dass man oben auf der Seite startet
+            }, 1200);
+        }
+    </script>
+
+</body>
+</html>
