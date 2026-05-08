@@ -98,14 +98,14 @@
       </div>
       <div class="input-group">
         <label>Dein Kaufkurs Zertifikat (€)</label>
-        <span class="info">Dein tatsächlicher Einstiegspreis</span>
+        <span class="info">Dein ursprünglicher Einstiegspreis</span>
         <input id="entryCert" type="number" value="1.50" step="any">
       </div>
     </div>
     <div class="row">
       <div class="input-group">
         <label>Aktueller Preis Zertifikat (€)</label>
-        <span class="info">Aktueller Kurs laut deinem Broker</span>
+        <span class="info">Aktueller Kurs laut Broker</span>
         <input id="currentCertPrice" class="highlight-input" type="number" value="1.55" step="any">
       </div>
       <div class="input-group">
@@ -121,7 +121,7 @@
       </div>
       <div class="input-group">
         <label>Bezugsverhältnis</label>
-        <span class="info">Z.B. 0.1, 0.01 oder 1</span>
+        <span class="info">Wichtig: Z.B. 0.1 (für 10:1) oder 0.01</span>
         <input id="ratio" type="number" value="0.1" step="any">
       </div>
     </div>
@@ -189,11 +189,14 @@ function calc() {
   // --- 1. Aktuelle Position & Aufgeld berechnen ---
   // Innerer Wert bei Short: (KO - Basiswert) * Bezugsverhältnis
   const innerValue = Math.max(0, (ko - priceUnderlying) * ratio);
-  // Das Aufgeld ist die Differenz zwischen Brokerpreis und innerem Wert
+  // Das Aufgeld (Premium) ist die Differenz zwischen Brokerpreis und innerem Wert
   const premium = currentCertPrice - innerValue; 
   
-  // Effektiver Hebel basierend auf deinem tatsächlichen Brokerpreis
-  const effectiveLeverage = (priceUnderlying * ratio) / currentCertPrice;
+  // Effektiver Hebel
+  let effectiveLeverage = 0;
+  if (currentCertPrice > 0) {
+      effectiveLeverage = (priceUnderlying * ratio) / currentCertPrice;
+  }
   
   const entryCost = qty * entryCert;
   const currentValue = qty * currentCertPrice;
@@ -204,7 +207,8 @@ function calc() {
       <strong>Marktwert Position:</strong> ${currentValue.toFixed(2)} €<br>
       <strong>Einsatz:</strong> ${entryCost.toFixed(2)} €<br>
       <strong>Unreal. PnL:</strong> ${formatMoney(pnl)}<br><br>
-      <strong>Effektiver Hebel:</strong> ${effectiveLeverage.toFixed(2)}x<br>
+      <strong>Aktueller Hebel:</strong> ${effectiveLeverage.toFixed(2)} 
+      <span class="info">(Formel: Basiswert × Bezugsverhältnis ÷ Zertifikatepreis)</span><br>
       <strong>Abstand zum KO:</strong> ${(ko - priceUnderlying).toFixed(2)} € (${((ko - priceUnderlying) / priceUnderlying * 100).toFixed(2)}%)
       <div class="premium-info">
         <em>Info: Innerer Wert ist ${innerValue.toFixed(2)} €. Der Broker verlangt aktuell ein Aufgeld von ${premium.toFixed(2)} € pro Stück.</em>
@@ -212,62 +216,81 @@ function calc() {
     </div>
   `;
 
-  // --- 2. Nachkauf ---
-  // Zukünftiger Zertifikatepreis = neuer innerer Wert + unser ermitteltes Aufgeld
-  const buyInnerValue = Math.max(0, (ko - buyPriceUnderlying) * ratio);
-  const estBuyCertPrice = Math.max(0, buyInnerValue + premium); 
-
-  const newQty = qty + buyQty;
+  // --- 2. Nachkauf isoliert berechnen ---
+  let newQty = qty;
   let newEntryCost = entryCost;
   let avgEntryCert = entryCert;
+  let dcaActive = false;
 
-  // Bei Short: Noch nicht KO, wenn buyPriceUnderlying < ko
-  if (buyQty > 0 && buyPriceUnderlying < ko) {
-    newEntryCost = entryCost + (buyQty * estBuyCertPrice);
-    avgEntryCert = newEntryCost / newQty;
-    
-    // PnL beim Nachkaufkurs (nur interessant für die alte Position, da neue Position PnL=0 beim Kauf hat)
-    const newPositionValueAtBuyTime = newQty * estBuyCertPrice;
-    const pnlAtBuyTime = newPositionValueAtBuyTime - newEntryCost;
+  if (buyQty > 0 && buyPriceUnderlying > 0) {
+    if (buyPriceUnderlying >= ko) {
+       out2.innerHTML = `<div class="danger-box">⚠️ Beim Nachkaufkurs ist das KO-Level bereits erreicht. Nachkauf ignoriert.</div>`;
+    } else {
+      const buyInnerValue = Math.max(0, (ko - buyPriceUnderlying) * ratio);
+      const estBuyCertPrice = Math.max(0, buyInnerValue + premium); 
 
-    out2.innerHTML = `
-      <div class="result">
-        <strong>Zertifikatpreis (Nachkauf):</strong> ${estBuyCertPrice.toFixed(2)} €<br>
-        <strong>Gesamtanteile:</strong> ${newQty} Stück<br>
-        <strong>Neuer Buy-In:</strong> ${avgEntryCert.toFixed(2)} €<br>
-        <strong>Gesamtkapital:</strong> ${newEntryCost.toFixed(2)} €<br>
-        <strong>Buchverlust (beim Nachkauf):</strong> ${formatMoney(pnlAtBuyTime)}
-      </div>
-    `;
-  } else if (buyPriceUnderlying >= ko && buyQty > 0) {
-     out2.innerHTML = `<div class="danger-box">⚠️ Beim Nachkaufkurs ist das KO-Level bereits erreicht.</div>`;
+      newQty = qty + buyQty;
+      newEntryCost = entryCost + (buyQty * estBuyCertPrice);
+      avgEntryCert = newEntryCost / newQty;
+      dcaActive = true;
+      
+      const newPositionValueAtBuyTime = newQty * estBuyCertPrice;
+      const pnlAtBuyTime = newPositionValueAtBuyTime - newEntryCost;
+
+      out2.innerHTML = `
+        <div class="result">
+          <strong>Zertifikatpreis (Nachkauf):</strong> ${estBuyCertPrice.toFixed(2)} €<br>
+          <strong>Gesamtanteile:</strong> ${newQty} Stück<br>
+          <strong>Neuer Ø Buy-In:</strong> ${avgEntryCert.toFixed(2)} €<br>
+          <strong>Gesamtkapital:</strong> ${newEntryCost.toFixed(2)} €<br>
+          <strong>Buchverlust (am Punkt des Nachkaufs):</strong> ${formatMoney(pnlAtBuyTime)}
+        </div>
+      `;
+    }
   } else {
-    out2.innerHTML = `<div class="result">Kein Nachkauf eingegeben.</div>`;
+    out2.innerHTML = `<div class="result">Kein Nachkauf konfiguriert.</div>`;
   }
 
-  // --- 3. Zielkurs ---
-  // Bei Short muss der Zielkurs UNTER dem KO liegen
-  if (targetUnderlying < ko) {
-    const targetInnerValue = Math.max(0, (ko - targetUnderlying) * ratio);
-    const estTargetCertPrice = Math.max(0, targetInnerValue + premium);
-    
-    // Ohne Nachkauf
-    const targetValueBase = qty * estTargetCertPrice;
-    const pnlBase = targetValueBase - entryCost;
+  // --- 3. Zielkurs berechnen ---
+  if (targetUnderlying > 0) {
+    if (targetUnderlying >= ko) {
+      out3.innerHTML = `<div class="danger-box">⚠️ Bei diesem Zielkurs ist das Zertifikat KO gegangen.</div>`;
+    } else {
+      const targetInnerValue = Math.max(0, (ko - targetUnderlying) * ratio);
+      const estTargetCertPrice = Math.max(0, targetInnerValue + premium);
+      
+      // Ohne Nachkauf
+      const targetValueBase = qty * estTargetCertPrice;
+      const pnlBase = targetValueBase - entryCost;
+      const pnlPerCertBase = estTargetCertPrice - entryCert;
 
-    // Mit Nachkauf
-    const targetValueNew = newQty * estTargetCertPrice;
-    const pnlNew = targetValueNew - newEntryCost;
+      // HTML für Nachkauf-Block vorbereiten
+      let dcaHtml = "";
+      if (dcaActive) {
+        const targetValueNew = newQty * estTargetCertPrice;
+        const pnlNew = targetValueNew - newEntryCost;
+        const pnlPerCertNew = estTargetCertPrice - avgEntryCert;
+        dcaHtml = `
+          <br><br>
+          <strong>MIT NACHKAUF (DCA):</strong><br>
+          <span class="info">Gewinn pro Zertifikat: ${estTargetCertPrice.toFixed(2)} € (Ziel) - ${avgEntryCert.toFixed(2)} € (Ø Buy-In) = ${formatMoney(pnlPerCertNew)}</span>
+          <strong>PnL Gesamt:</strong> ${formatMoney(pnlNew)} <em>(Auszahlung: ${targetValueNew.toFixed(2)} €)</em>
+        `;
+      }
 
-    out3.innerHTML = `
-      <div class="result">
-        <strong>Zertifikatpreis (Ziel):</strong> ${estTargetCertPrice.toFixed(2)} €<br><br>
-        <strong>PnL ohne Nachkauf:</strong> ${formatMoney(pnlBase)} <em>(${targetValueBase.toFixed(2)} €)</em><br>
-        <strong>PnL mit Nachkauf:</strong> ${formatMoney(pnlNew)} <em>(${targetValueNew.toFixed(2)} €)</em>
-      </div>
-    `;
-  } else {
-    out3.innerHTML = `<div class="danger-box">⚠️ Bei diesem Zielkurs ist das Zertifikat KO gegangen.</div>`;
+      out3.innerHTML = `
+        <div class="result">
+          <strong>Ziel-Zertifikatpreis:</strong> ${estTargetCertPrice.toFixed(2)} €<br>
+          <span class="info">(Innerer Wert bei Ziel: ${targetInnerValue.toFixed(2)} € + Aufgeld: ${premium.toFixed(2)} €)</span><br><br>
+          
+          <strong>OHNE NACHKAUF:</strong><br>
+          <span class="info">Gewinn pro Zertifikat: ${estTargetCertPrice.toFixed(2)} € (Ziel) - ${entryCert.toFixed(2)} € (Kaufkurs) = ${formatMoney(pnlPerCertBase)}</span>
+          <strong>PnL Gesamt:</strong> ${formatMoney(pnlBase)} <em>(Auszahlung: ${targetValueBase.toFixed(2)} €)</em>
+          
+          ${dcaHtml}
+        </div>
+      `;
+    }
   }
 }
 
