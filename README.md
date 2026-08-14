@@ -14,3 +14,10 @@ Beschreibung und Name ging bei denen jetzt...
 - neuen angriff designen
 
 PAK\GameMechanics\Creature\Creatures  <- Unit XDBs, stats, fähigkeiten, etc. 
+
+
+Sonstiges:
+Damageberechnung: https://bts-sol.github.io/Heroes-5-PAK-Rework/hebel.html
+Damageberechnung: https://bts-sol.github.io/Heroes-5-PAK-Rework/hochzeit.html
+Damageberechnung: https://bts-sol.github.io/Heroes-5-PAK-Rework/short.html
+Damageberechnung: https://bts-sol.github.io/Heroes-5-PAK-Rework/ChartAuslegung.html
